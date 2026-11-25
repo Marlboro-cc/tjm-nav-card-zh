@@ -1,0 +1,309 @@
+{
+  "id": "cluster_nav_card",
+  "title": "TJM 仪表盘导航卡片",
+  "description": "在仪表盘地图上显示下一次转向、距离、道路名称和车道提示。可读取手机或宝马原车导航、导航文件，也可演示路线。需要 Waze on cluster 和 cluster-render。Waze 自身不提供转向指引。",
+  "version": "0.9.204",
+  "vendor": "TJM",
+  "loggingId": "OB33",
+  "iconGlyph": "navcard",
+  "signals": {
+    "de.bmw.infotainment.navigation.guiding.Guidance": {
+      "_instances": "Main_Instance",
+      "_optional": "无法读取车机转向指引时，可使用导航文件或演示路线",
+      "guidanceState": "rs",
+      "guidingProvider": "rs",
+      "conclusiveDart": "rs",
+      "currentLaneGuiding": "rs",
+      "nextIntersection": "rs",
+      "finalDestinationInfo": "rs"
+    },
+    "de.bmw.infotainment.a4a.carplay.CarPlayManager": {
+      "_instances": "CarPlayManagerInst1",
+      "_optional": "无法判断手机是否发送转向数据",
+      "projectedGuidanceMetadataAvailable": "rs",
+      "projectedGuidanceActive": "rs"
+    },
+    "de.bmw.infotainment.navigation.projectedmodeguiding.ProjectedModeGuiding": {
+      "_instances": "Main_Instance",
+      "_optional": "无法诊断手机提供的导航数据",
+      "activeRouteChange": "rs",
+      "currentRoad": "rs",
+      "currentLaneGuiding": "rs",
+      "waypoints": "rs"
+    },
+    "de.bmw.infotainment.navigation.guiding.GuidanceEventList": {
+      "_instances": "Main_Instance",
+      "_optional": "无法从车机事件列表读取转向信息",
+      "_methods": [
+        "queryContent"
+      ]
+    },
+    "de.bmw.infotainment.navigation.externalize.adasng.CCP": {
+      "_instances": "1",
+      "_optional": "无法根据车辆所在地区判断环岛通行方向",
+      "countryCode": "rs",
+      "_broadcasts": [
+        "trafficSide"
+      ]
+    }
+  },
+  "screens": [
+    {
+      "name": "MAIN",
+      "kind": "canvas",
+      "title": "TJM 仪表盘导航卡片",
+      "buttons": [
+        [
+          "BTN_SETTINGS",
+          "设置"
+        ]
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "key": "show",
+      "label": "仪表盘卡片",
+      "type": "choice",
+      "default": "cluster",
+      "options": [
+        [
+          "cluster",
+          "导航时叠加在地图上"
+        ],
+        [
+          "off",
+          "关闭"
+        ]
+      ]
+    },
+    {
+      "key": "place",
+      "label": "卡片位置",
+      "type": "choice",
+      "default": "topCenter",
+      "options": [
+        [
+          "topCenter",
+          "地图顶部居中"
+        ],
+        [
+          "topLeft",
+          "地图左上方"
+        ],
+        [
+          "topRight",
+          "地图右上方"
+        ]
+      ]
+    },
+    {
+      "key": "vpos",
+      "label": "卡片高度",
+      "type": "choice",
+      "default": "badge",
+      "options": [
+        [
+          "badge",
+          "车型标识下方"
+        ],
+        [
+          "top",
+          "地图顶部"
+        ],
+        [
+          "low",
+          "原车转向提示框下方"
+        ]
+      ]
+    },
+    {
+      "key": "size",
+      "label": "卡片大小",
+      "type": "choice",
+      "default": "normal",
+      "options": [
+        [
+          "small",
+          "小"
+        ],
+        [
+          "normal",
+          "标准"
+        ],
+        [
+          "large",
+          "大"
+        ]
+      ]
+    },
+    {
+      "key": "width",
+      "label": "卡片宽度",
+      "type": "choice",
+      "default": "fixed",
+      "options": [
+        [
+          "fixed",
+          "固定宽度"
+        ],
+        [
+          "fit",
+          "随文字调整"
+        ]
+      ]
+    },
+    {
+      "key": "units",
+      "label": "距离单位",
+      "type": "choice",
+      "default": "metric",
+      "options": [
+        [
+          "metric",
+          "米、公里"
+        ],
+        [
+          "imperial",
+          "英尺、英里"
+        ]
+      ]
+    },
+    {
+      "key": "shields",
+      "label": "道路编号样式",
+      "type": "choice",
+      "default": "nl",
+      "options": [
+        [
+          "nl",
+          "荷兰（A 红、N 黄、城市道路 s）"
+        ],
+        [
+          "de",
+          "德国（A 蓝、B 黄）"
+        ],
+        [
+          "fr",
+          "法国（A、N 红，D 黄）"
+        ],
+        [
+          "uk",
+          "英国（M 蓝、A 绿）"
+        ],
+        [
+          "generic",
+          "通用（欧洲公路为绿色）"
+        ]
+      ]
+    },
+    {
+      "key": "trafficSide",
+      "label": "通行方向",
+      "type": "choice",
+      "default": "auto",
+      "options": [
+        [
+          "auto",
+          "自动（优先采用导航数据，其次采用车辆位置）"
+        ],
+        [
+          "right",
+          "靠右行驶"
+        ],
+        [
+          "left",
+          "靠左行驶"
+        ]
+      ]
+    },
+    {
+      "key": "provider",
+      "label": "导航来源",
+      "type": "choice",
+      "default": "phone",
+      "options": [
+        [
+          "phone",
+          "手机导航（CarPlay、Android Auto）"
+        ],
+        [
+          "any",
+          "手机或宝马原车导航"
+        ]
+      ]
+    },
+    {
+      "key": "demoRoute",
+      "label": "演示路线",
+      "type": "choice",
+      "default": "off",
+      "options": [
+        [
+          "off",
+          "关闭，使用实际导航"
+        ],
+        [
+          "on",
+          "开启，显示演示路线"
+        ]
+      ]
+    },
+    {
+      "key": "eventLog",
+      "label": "事件日志",
+      "type": "choice",
+      "default": "on",
+      "options": [
+        [
+          "on",
+          "开启，写入 data/cluster_nav_card-events.jsonl"
+        ],
+        [
+          "off",
+          "关闭"
+        ]
+      ]
+    },
+    {
+      "key": "theme",
+      "label": "配色",
+      "type": "choice",
+      "default": "m_tricolour",
+      "options": [
+        [
+          "m_red",
+          "M 红色"
+        ],
+        [
+          "m_tricolour",
+          "M 三色"
+        ],
+        [
+          "ice",
+          "冰白色"
+        ],
+        [
+          "amber",
+          "夜间琥珀色"
+        ]
+      ]
+    },
+    {
+      "key": "renderer",
+      "label": "渲染方式",
+      "type": "choice",
+      "default": "auto",
+      "options": [
+        [
+          "auto",
+          "GPU，60 帧/秒（默认）"
+        ],
+        [
+          "software",
+          "软件渲染"
+        ]
+      ]
+    }
+  ]
+}
